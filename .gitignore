@@ -1,0 +1,17 @@
+# Maven Build-Ordner (inkl. PIT-Reports unter target/pit-reports)
+target/
+
+# Lokale H2-Datenbankdateien
+*.mv.db
+*.trace.db
+*.lock.db
+
+# VS Code
+.vscode/
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
