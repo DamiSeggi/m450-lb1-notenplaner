@@ -1,0 +1,37 @@
+name: Java CI with Maven and PIT
+
+on:
+  # Sobald Elias bereit ist, Kommentare entferne
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Code auschecken
+        uses: actions/checkout@v4
+
+      - name: 2. Java 21 (Temurin) aufsetzen & Maven cachen
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: 3. Unit-Tests ausführen
+        run: mvn -B test
+
+      - name: 4. Mutation-Testing (PIT) ausführen
+        run: mvn -B test-compile pitest:mutationCoverage
+
+      - name: 5. PIT-Report hochladen
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pit-report
+          path: target/pit-reports
