@@ -2,6 +2,7 @@ package com.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
@@ -152,5 +153,18 @@ class NotenServiceTest {
 
         // Assert
         assertEquals(noten, ergebnis);
+    }
+
+    @Test
+    @DisplayName("notenVonLernendem: Lernender ohne Noten ergibt leere Liste")
+    void notenVonLernendem_keineNoten_gibtLeereListeZurueck() {
+        // Arrange
+        when(notenRepository.findByLernenderId(1)).thenReturn(List.of());
+
+        // Act
+        List<Note> ergebnis = notenService.notenVonLernendem(1);
+
+        // Assert
+        assertTrue(ergebnis.isEmpty());
     }
 }
