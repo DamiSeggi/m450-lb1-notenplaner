@@ -1,11 +1,10 @@
 name: Java CI with Maven and PIT
 
 on:
-  # Sobald Elias bereit ist, Kommentare entferne
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -34,4 +33,4 @@ jobs:
         if: always()
         with:
           name: pit-report
-          path: target/pit-reports
+          path: target/pit-reports/**
