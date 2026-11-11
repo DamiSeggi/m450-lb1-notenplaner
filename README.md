@@ -2,6 +2,9 @@
 
 Notenplaner für das Modul 450 „Applikationen testen“ (LB1). Lernende, Fächer und Noten werden in einer H2-Datenbank gespeichert. Getestet wird mit JUnit 5, Mockito und PIT.
 
+- **Autoren:** Damian Segginger, Elias Oschwald, Jason Zeitz
+- **Klasse:** INA24B
+
 ## Aufbau
 
 | Klasse | Aufgabe |
@@ -36,10 +39,10 @@ Notenplaner für das Modul 450 „Applikationen testen“ (LB1). Lernende, Fäch
 
 - **Black-Box:** Positiv- und Negativtests, Äquivalenzklassen und Grenzwertanalyse. Beispiel `istGueltig` (gültig von 1.0 bis 6.0):
 
-  | Wert | 0.0 | 0.9 | 1.0 | 1.1 | 3.5 | 5.9 | 6.0 | 6.1 | 7.0 | NaN |
-  |---|---|---|---|---|---|---|---|---|---|---|
-  | Testfall | zu tief | min − 1 | min | min + 1 | typisch | max − 1 | max | max + 1 | zu hoch | keine Zahl |
-  | Erwartet | false | false | true | true | true | true | true | false | false | false |
+  | Wert | -1.0 | 0.0 | 0.9 | 1.0 | 1.1 | 3.5 | 5.9 | 6.0 | 6.1 | 7.0 | NaN |
+  |---|---|---|---|---|---|---|---|---|---|---|---|
+  | Testfall | negativ | zu tief | min − 1 | min | min + 1 | typisch | max − 1 | max | max + 1 | zu hoch | keine Zahl |
+  | Erwartet | false | false | false | true | true | true | true | true | false | false | false |
 
 - **White-Box:** Zeilenabdeckung 100 %. Bei `noteErfassen` sind alle 4 Pfade getestet: Lernender fehlt, Fach fehlt, Note ungültig, Erfolg.
 - **Mocking:** Im `NotenServiceTest` und `StatistikServiceTest` sind alle Abhängigkeiten gemockt. Die Datenbank wird nie kontaktiert.
@@ -60,7 +63,7 @@ Mutiert werden `NotenService` und `NotenRechner`. Ergebnis: **18 von 18 Mutanten
 
 Aktive Mutatoren (PIT-Standard):
 
-| Mutator | Was er ändert | Beispiel bei uns | Getötet durch |
+| Mutator | Was er ändert | Beispiel im Code | Getötet durch |
 |---|---|---|---|
 | CONDITIONALS_BOUNDARY | Grenze einer Bedingung | `note >= 4.0` wird `note > 4.0` (`istGenuegend`) | Test mit 4.0 erwartet `true` |
 | NEGATE_CONDITIONALS | kehrt eine Bedingung um | `if (...isEmpty())` wird `if (!...isEmpty())` (`noteErfassen`) | Test „Lernender fehlt“ erwartet eine Exception |
@@ -70,4 +73,4 @@ Aktive Mutatoren (PIT-Standard):
 | NULL_RETURNS | gibt `null` zurück | `noteErfassen` liefert `null` | `assertEquals(gespeicherteNote, ergebnis)` |
 | EMPTY_RETURNS | gibt eine leere Liste zurück | `notenVonLernendem` liefert `[]` | Test mit zwei Noten vergleicht die Liste |
 | PRIMITIVE_RETURNS | gibt `0` zurück | `rundeAufHalbe` liefert `0.0` | Rundungstests |
-| FALSE_RETURNS, INCREMENTS, INVERT_NEGS | aktiv, erzeugen bei unserem Code keine Mutanten | – | – |
+| FALSE_RETURNS, INCREMENTS, INVERT_NEGS | aktiv, erzeugen in diesem Code keine Mutanten | – | – |
