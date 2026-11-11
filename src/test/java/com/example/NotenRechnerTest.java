@@ -13,6 +13,7 @@ class NotenRechnerTest {
 
     @ParameterizedTest(name = "{0} -> {1} ({2})")
     @CsvSource({
+        "-1.0, false, negative Zahl",
         "0.0, false, Äquivalenzklasse zu tief",
         "0.9, false, min - 1",
         "1.0, true, min",
