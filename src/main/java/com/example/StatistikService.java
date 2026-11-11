@@ -14,6 +14,6 @@ public class StatistikService {
         return notenRepository.findByFachId(fachId).stream()
                 .mapToDouble(Note::wert)
                 .average()
-                .orElse(Double.NaN);
+                .orElseThrow(() -> new IllegalStateException("Keine Noten für Fach " + fachId));
     }
 }
