@@ -11,6 +11,6 @@ public class StatistikService {
 
     /** Gibt den Notendurchschnitt eines Fachs zurück. */
     public double durchschnittProFach(int fachId) {
-        return 0.0;
+        return notenRepository.findByFachId(fachId).get(0).wert();
     }
 }
