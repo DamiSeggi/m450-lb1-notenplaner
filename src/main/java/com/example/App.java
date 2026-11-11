@@ -15,11 +15,13 @@ public class App {
             NotenRechner notenRechner = new NotenRechner();
             NotenService notenService = new NotenService(
                     notenRepository, lernenderRepository, fachRepository, notenRechner);
+            StatistikService statistikService = new StatistikService(notenRepository);
 
             if (lernenderRepository.findAll().isEmpty()) {
                 beispieldatenAnlegen(lernenderRepository, fachRepository, notenService);
             }
             notenAnzeigen(lernenderRepository, fachRepository, notenService, notenRechner);
+            durchschnitteAnzeigen(fachRepository, statistikService, notenRechner);
         }
     }
 
@@ -49,6 +51,22 @@ public class App {
                 String fach = fachRepository.findById(note.fachId()).orElseThrow().bezeichnung();
                 String bewertung = notenRechner.istGenuegend(note.wert()) ? "genügend" : "ungenügend";
                 System.out.println("  " + fach + ": " + note.wert() + " (" + note.datum() + ", " + bewertung + ")");
+            }
+        }
+    }
+
+    /** Gibt den Notendurchschnitt jedes Fachs aus. */
+    private static void durchschnitteAnzeigen(FachRepository fachRepository,
+                                              StatistikService statistikService,
+                                              NotenRechner notenRechner) {
+        System.out.println("Durchschnitt pro Fach");
+        for (Fach fach : fachRepository.findAll()) {
+            try {
+                double durchschnitt = statistikService.durchschnittProFach(fach.id());
+                System.out.println("  " + fach.bezeichnung() + ": " + durchschnitt
+                        + " (gerundet " + notenRechner.rundeAufHalbe(durchschnitt) + ")");
+            } catch (IllegalStateException e) {
+                System.out.println("  " + fach.bezeichnung() + ": keine Noten");
             }
         }
     }
