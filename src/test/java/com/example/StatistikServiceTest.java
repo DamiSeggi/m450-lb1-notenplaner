@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @DisplayName("StatistikService")
 class StatistikServiceTest {
 
+    private static final int FACH_ID = 2;
     private static final LocalDate DATUM = LocalDate.of(2026, 11, 4);
 
     @Mock
@@ -26,14 +27,19 @@ class StatistikServiceTest {
     @InjectMocks
     private StatistikService statistikService;
 
+    /** Erstellt eine Note im getesteten Fach. */
+    private static Note note(double wert) {
+        return new Note(0, wert, DATUM, 1, FACH_ID);
+    }
+
     @Test
     @DisplayName("durchschnittProFach: eine Note ergibt genau diese Note")
     void durchschnittProFach_eineNote_gibtDieseNoteZurueck() {
         // Arrange
-        when(notenRepository.findByFachId(2)).thenReturn(List.of(new Note(1, 4.5, DATUM, 1, 2)));
+        when(notenRepository.findByFachId(FACH_ID)).thenReturn(List.of(note(4.5)));
 
         // Act
-        double durchschnitt = statistikService.durchschnittProFach(2);
+        double durchschnitt = statistikService.durchschnittProFach(FACH_ID);
 
         // Assert
         assertEquals(4.5, durchschnitt);
@@ -43,13 +49,10 @@ class StatistikServiceTest {
     @DisplayName("durchschnittProFach: mehrere Noten ergeben den Mittelwert")
     void durchschnittProFach_mehrereNoten_gibtMittelwertZurueck() {
         // Arrange
-        when(notenRepository.findByFachId(2)).thenReturn(List.of(
-                new Note(1, 4.0, DATUM, 1, 2),
-                new Note(2, 5.0, DATUM, 2, 2),
-                new Note(3, 6.0, DATUM, 3, 2)));
+        when(notenRepository.findByFachId(FACH_ID)).thenReturn(List.of(note(4.0), note(5.0), note(6.0)));
 
         // Act
-        double durchschnitt = statistikService.durchschnittProFach(2);
+        double durchschnitt = statistikService.durchschnittProFach(FACH_ID);
 
         // Assert
         assertEquals(5.0, durchschnitt);
@@ -59,11 +62,11 @@ class StatistikServiceTest {
     @DisplayName("durchschnittProFach: Fach ohne Noten wirft Exception")
     void durchschnittProFach_keineNoten_wirftException() {
         // Arrange
-        when(notenRepository.findByFachId(2)).thenReturn(List.of());
+        when(notenRepository.findByFachId(FACH_ID)).thenReturn(List.of());
 
         // Act
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> statistikService.durchschnittProFach(2));
+                () -> statistikService.durchschnittProFach(FACH_ID));
 
         // Assert
         assertEquals("Keine Noten für Fach 2", exception.getMessage());
