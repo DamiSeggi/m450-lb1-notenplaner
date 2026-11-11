@@ -37,4 +37,20 @@ class StatistikServiceTest {
         // Assert
         assertEquals(4.5, durchschnitt);
     }
+
+    @Test
+    @DisplayName("durchschnittProFach: mehrere Noten ergeben den Mittelwert")
+    void durchschnittProFach_mehrereNoten_gibtMittelwertZurueck() {
+        // Arrange
+        when(notenRepository.findByFachId(2)).thenReturn(List.of(
+                new Note(1, 4.0, DATUM, 1, 2),
+                new Note(2, 5.0, DATUM, 2, 2),
+                new Note(3, 6.0, DATUM, 3, 2)));
+
+        // Act
+        double durchschnitt = statistikService.durchschnittProFach(2);
+
+        // Assert
+        assertEquals(5.0, durchschnitt);
+    }
 }
