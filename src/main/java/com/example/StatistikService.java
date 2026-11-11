@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.List;
+
 /** Berechnet Statistiken zu Noten. */
 public class StatistikService {
 
@@ -11,6 +13,11 @@ public class StatistikService {
 
     /** Gibt den Notendurchschnitt eines Fachs zurück. */
     public double durchschnittProFach(int fachId) {
-        return notenRepository.findByFachId(fachId).get(0).wert();
+        List<Note> noten = notenRepository.findByFachId(fachId);
+        double summe = 0;
+        for (Note note : noten) {
+            summe += note.wert();
+        }
+        return summe / noten.size();
     }
 }
