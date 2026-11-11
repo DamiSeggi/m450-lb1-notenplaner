@@ -1,6 +1,7 @@
 package com.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -52,5 +53,19 @@ class StatistikServiceTest {
 
         // Assert
         assertEquals(5.0, durchschnitt);
+    }
+
+    @Test
+    @DisplayName("durchschnittProFach: Fach ohne Noten wirft Exception")
+    void durchschnittProFach_keineNoten_wirftException() {
+        // Arrange
+        when(notenRepository.findByFachId(2)).thenReturn(List.of());
+
+        // Act
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> statistikService.durchschnittProFach(2));
+
+        // Assert
+        assertEquals("Keine Noten für Fach 2", exception.getMessage());
     }
 }
